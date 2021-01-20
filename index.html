@@ -83,9 +83,9 @@
 
 (function () {
   // open web debugger console
-  if (typeof VConsole !== 'undefined') {
-      window.vConsole = new VConsole();
-  }
+  // if (typeof VConsole !== 'undefined') {
+  //     window.vConsole = new VConsole();
+  // }
 
   var debug = window._CCSettings.debug;
   var splash = document.getElementById('splash');
@@ -204,6 +204,7 @@ function back()
         if (shakeCount >= 3)
         {
           shakeCount = 0;
+          console.log("shakeCB : ", window);
           window.shackCB(speed);
         }
       }
