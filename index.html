@@ -219,6 +219,7 @@ function back()
     if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
       DeviceMotionEvent.requestPermission()
       .then( response => {
+        console.log("response : " + response);
         if ( response == "granted" ) {
           window.addEventListener('devicemotion', motionHandler, false);
         }
