@@ -27,8 +27,8 @@
   <meta name="360-fullscreen" content="true"/>
   
   <!-- force screen orientation on some browser -->
-  <meta name="screen-orientation" content=""/>
-  <meta name="x5-orientation" content="">
+  <meta name="screen-orientation" content="auto"/>
+  <meta name="x5-orientation" content="auto">
 
   <!--fix fireball/issues/3568 -->
   <!--<meta name="browsermode" content="application">-->
@@ -37,171 +37,200 @@
   <!--<link rel="apple-touch-icon" href=".png" />-->
   <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
 
-  <link rel="stylesheet" type="text/css" href="style-mobile.49f5c.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+
 </head>
 <body>
   <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
-  <div id="splash">
-    <div class="progress-bar stripes">
-      <span style="width: 0%"></span>
-    </div>
-  </div>
+  
+<script src="./vconsole.min.js"></script>
+<script type="text/javascript">
+    // open web debugger console
+    window.VConsole && (window.vConsole = new VConsole());
+</script>
 
-<script src="src/settings.ced5a.js" charset="utf-8"></script>
+<!-- Polyfills bundle. -->
+<script src="src/polyfills.bundle.js" charset="utf-8"> </script>
 
-<script src="main.93d8a.js" charset="utf-8"></script>
-<script src="vconsole.min.bac6b.js" charset="utf-8"></script>
+<!-- SystemJS support. -->
+<script src="src/system.bundle.js" charset="utf-8"> </script>
+
+<!-- Import map -->
+<script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
+
+<script>
+    System.import('./index.js').catch(function(err) { console.error(err); })
+</script>
 
 <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 
 <script type="text/javascript">
-(function () {
-    // open web debugger console
-    if (typeof VConsole !== 'undefined') {
-        window.vConsole = new VConsole();
+
+  // console.log(aiad);
+  
+  // aiad.init({
+  //     debug: true,//ture:显示vConsole
+  //     crossOrigin: false//true:跨域
+  //   });
+
+  // aiad.getDeviceMac({
+  //     success: function (res) {
+  //       console.log("------------res:" + res);
+  //       console.log("------------mac:" + res.mac);
+  //       mac=res.mac;
+  //     }
+  //   });
+
+// (function () {
+//   // open web debugger console
+//   // if (typeof VConsole !== 'undefined') {
+//   //     window.vConsole = new VConsole();
+//   // }
+
+//   var debug = window._CCSettings.debug;
+//   var splash = document.getElementById('splash');
+//   splash.style.display = 'block';
+
+//   function loadScript (moduleName, cb) {
+//     function scriptLoaded () {
+//         document.body.removeChild(domScript);
+//         domScript.removeEventListener('load', scriptLoaded, false);
+//         cb && cb();
+//     };
+//     var domScript = document.createElement('script');
+//     domScript.async = true;
+//     domScript.src = moduleName;
+//     domScript.addEventListener('load', scriptLoaded, false);
+//     document.body.appendChild(domScript);
+//   }
+
+//   loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.js', function () {
+//     if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
+//       loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
+//     }
+//     else {
+//       window.boot();
+//     }
+//   });
+// })();
+
+function backToJoinGame(deviceId) 
+{
+  console.log("jump to wechat page JoinGame");
+  wx.miniProgram.reLaunch(
+  { 
+    url:  '/pages/index/index?goType=joinGame&deviceId='+deviceId,
+    success:()=>
+    {
+      console.error("backToJoinGame success!!!");
+      cc.director.end();
+    },
+    fail:()=>
+    {
+      console.error("backToJoinGame failed!!!");
     }
+  })
+}
 
-    var debug = window._CCSettings.debug;
-    var splash = document.getElementById('splash');
-    splash.style.display = 'block';
-
-    function loadScript (moduleName, cb) {
-      function scriptLoaded () {
-          document.body.removeChild(domScript);
-          domScript.removeEventListener('load', scriptLoaded, false);
-          cb && cb();
-      };
-      var domScript = document.createElement('script');
-      domScript.async = true;
-      domScript.src = moduleName;
-      domScript.addEventListener('load', scriptLoaded, false);
-      document.body.appendChild(domScript);
-    }
-
-    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.0de5e.js', function () {
-      if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
-        loadScript(debug ? 'physics.js' : 'physics-min.b5fcb.js', window.boot);
-      }
-      else {
-        window.boot();
-      }
-    });
-})();
-
-  function backToJoinGame(deviceId) 
-  {
-    console.log("jump to wechat page JoinGame");
-    wx.miniProgram.reLaunch(
-    { 
-      url:  '/pages/index/index?goType=joinGame&deviceId='+deviceId,
-      success:()=>
+function backToHome() 
+{
+  console.log("jump to wechat page Home");
+  wx.miniProgram.reLaunch(
+  { 
+    url: '/pages/index/index',
+    success:()=>
       {
-        console.error("backToJoinGame success!!!");
+        console.error("backToHome success!!!");
         cc.director.end();
       },
       fail:()=>
       {
-        console.error("backToJoinGame failed!!!");
+        console.error("backToHome failed!!!");
       }
-    })
-  }
-  
-  function backToHome() 
-  {
-    console.log("jump to wechat page Home");
-    wx.miniProgram.reLaunch(
-    { 
-      url: '/pages/index/index',
-      success:()=>
-        {
-          console.error("backToHome success!!!");
-          cc.director.end();
-        },
-        fail:()=>
-        {
-          console.error("backToHome failed!!!");
-        }
-    })
-  }
-  
-  function backToTickets() 
-  {
-    console.log("jump to wechat Tickets");
-    wx.miniProgram.reLaunch(
-    { 
-      url: '/pages/index/index?goType=ticket',
-      success:()=>
-        {
-          console.error("backToTickets success!!!");
-          cc.director.end();
-        },
-        fail:()=>
-        {
-          console.error("backTbackToTicketsoHome failed!!!");
-        }
-    })
-  }
+  })
+}
 
-  function back()
-  {
-    console.log("wechat back");
-    backToHome();
-  }
-
-    function quitGame() 
-    {
-      console.log("quitGame");
-      cc.director.end();
-    }
-
-    const SHAKE_SPEED = 400;
-    let lastTime = 0;
-    let x = y = z = lastX = lastY = lastZ = 0;
-    let shakeCount = 0;
-
-    function motionHandler(event) 
-    {
-      // console.log(event);
-
-      let acceleration = event.accelerationIncludingGravity;
-      let curTime = Date.now();
-      if ((curTime - lastTime) > 20) {
-        let diffTime = curTime - lastTime;
-        lastTime = curTime;
-        x = acceleration.x;
-        y = acceleration.y;
-        z = acceleration.z;
-
-        let speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 1000;
-        if (speed > SHAKE_SPEED) {
-          shakeCount ++;
-          if (shakeCount >= 3)
-          {
-            shakeCount = 0;
-            window.shackCB(speed);
-          }
-        }
-        lastX = x;
-        lastY = y;
-        lastZ = z;
+function backToTickets() 
+{
+  console.log("jump to wechat Tickets");
+  wx.miniProgram.reLaunch(
+  { 
+    url: '/pages/index/index?goType=ticket',
+    success:()=>
+      {
+        console.error("backToTickets success!!!");
+        cc.director.end();
+      },
+      fail:()=>
+      {
+        console.error("backTbackToTicketsoHome failed!!!");
       }
+  })
+}
+
+function back()
+{
+  console.log("wechat back");
+  backToHome();
+}
+
+  function quitGame() 
+  {
+    console.log("quitGame");
+    cc.director.end();
+  }
+
+  const SHAKE_SPEED = 400;
+  let lastTime = 0;
+  let x = y = z = lastX = lastY = lastZ = 0;
+  let shakeCount = 0;
+
+  function motionHandler(event) 
+  {
+    // console.log(event);
+
+    let acceleration = event.accelerationIncludingGravity;
+    let curTime = Date.now();
+    if ((curTime - lastTime) > 20) {
+      let diffTime = curTime - lastTime;
+      lastTime = curTime;
+      x = acceleration.x;
+      y = acceleration.y;
+      z = acceleration.z;
+
+      let speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 1000;
+      if (speed > SHAKE_SPEED) {
+        shakeCount ++;
+        if (shakeCount >= 3)
+        {
+          shakeCount = 0;
+          console.log("shakeCB : ", window);
+          window.shackCB(speed);
+        }
+      }
+      lastX = x;
+      lastY = y;
+      lastZ = z;
     }
-  
-    function motionPermission () 
-    {
-      if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-        DeviceMotionEvent.requestPermission()
-        .then( response => {
-          if ( response == "granted" ) {
-            window.addEventListener('devicemotion', motionHandler, false);
-          }
-        })
-        .catch( console.error )
-      } else {
-          // alert( "DeviceMotionEvent is not defined" );
+  }
+
+  function motionPermission () 
+  {
+    if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+      DeviceMotionEvent.requestPermission()
+      .then( response => {
+        console.log("response : " + response);
+        if ( response == "granted" ) {
           window.addEventListener('devicemotion', motionHandler, false);
-      }
+        }
+      })
+      .catch( console.error )
+    } else {
+        // alert( "DeviceMotionEvent is not defined" );
+        window.addEventListener('devicemotion', motionHandler, false);
     }
+  }
 </script>
+
 </body>
 </html>
